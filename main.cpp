@@ -1,11 +1,13 @@
 #include <ncurses.h>
 #include <unistd.h>
 #include <signal.h>
+#include <stdio.h>
 
 #include "src/SnakeGame.hpp"
 
 void cleanup(int sig) {
     endwin();
+    printf("Program crash\n");
     exit(1);
 }
 
@@ -31,8 +33,7 @@ int main() {
 
     while (game.alive) {
         int event = getch();
-        game.eventHandler(event);
-        usleep(100000);
+        game.eventLoop(event);
     }
 
     getch();

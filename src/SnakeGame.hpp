@@ -160,6 +160,7 @@ public:
     }
 
     void step() {
+
         if (!alive) return;
 
         // sanity check
@@ -191,9 +192,8 @@ public:
 
     }
 
-    void eventHandler(int event) {
-        /*
-        int64_t timeNow = std::chrono::duration_cast<std::chrono::microseconds>(
+    void eventLoop(int event) {
+        int64_t timeNow = std::chrono::duration_cast<std::chrono::milliseconds>(
             std::chrono::system_clock::now()
             .time_since_epoch()
         ).count();
@@ -204,12 +204,15 @@ public:
 
         if (timeNow - timeThen > SLEEP_TIME_MS) {
             timeThen = timeNow;
-            event = eventQueue.front();
-            eventQueue.pop_front();
+            if (!eventQueue.empty()) {
+                event = eventQueue.front();
+                eventQueue.pop_front();
+            } else {
+                event = ERR;
+            }
         } else {
             return;
         }
-        */
 
         int newRowMovement, newColMovement;
         newRowMovement = rowMovement;
