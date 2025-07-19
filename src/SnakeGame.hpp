@@ -9,13 +9,14 @@
 
 #define INITIAL_SNAKE_SIZE 4
 
-#define SLEEP_TIME_MS 150
+#define SNAKE_SPEED 150
 
 /**
  * (y, x) represents the actual coordinates in the window.
  * (row, col) represents the coordinates in terms of the cell.
  * A cell is essentially a block of terminal characters.
  * All the functions are non-blocking
+ * All functions do NOT refresh the window except eventLoop and the constructor
  */
 class SnakeGame {
 public:
@@ -26,6 +27,8 @@ public:
 
     int yMax, xMax; 
     int nRows, nCols;
+
+    int sleepIntervalMs;
 
     /// @brief Snake is a list of (row, col) pairs. The first element is the tail and the last element is the head.
     /// This list always reflects what is actually displayed in the WINDOW* win.
@@ -53,19 +56,17 @@ public:
     SnakeGame(int startY, int startX, int nRows, int nCols); 
 
     /// @brief Places apple at a random location (not in corners or on the snake)
-    /// Uses displayCell calls. Does not refresh the window.
+    /// Uses displayCell calls.
     void placeApple(); 
 
     /// @brief Displays ch into the cell (row, col) by repeating ch for every character in the cell
-    /// Does not refresh the window.
     void displayCell(int row, int col, chtype ch); 
 
     /// @brief Pushes the head of the snake to the next cell in the direction of movement
-    /// Does not refresh the window.
     /// If the pushed head will collide, nothing happens other than the old head being drawn with snakeBodyChar instead of snakeHeadChar.
     void pushHead(); 
 
-    /// @brief Removes the tail of the snake. Does not refresh the window.
+    /// @brief Removes the tail of the snake.
     void pullTail(); 
 
     /// @brief Moves the snake one step and refreshes the windows.
@@ -81,9 +82,11 @@ public:
     /// @brief Colors the snake with deadSnakeChar (as an animation)
     void deathAnimationStep();
 
-    /// @brief Main event loop of this widget. Refreshes on every call.
+    /// @brief Main event loop of this widget. Refreshes at the end of the function
     /// Only point of contact with the main function
     void eventLoop(int event); 
 
-    void eventHandler();
+    void eventHandlerAlive();
+    void eventHandlerDead();
+    int popEvent();
 };

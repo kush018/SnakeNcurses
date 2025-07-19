@@ -146,7 +146,6 @@ void SnakeGame::step() {
     pushHead();
 
     if (!alive) {
-        wrefresh(win);
         return;
     }
 
@@ -162,7 +161,6 @@ void SnakeGame::step() {
         }
     }
 
-    wrefresh(win);
 
 }
 
@@ -184,27 +182,19 @@ bool SnakeGame::isAwake() {
     return timeNowMicro >= wakeUpTimeMicro;
 }
 
-void SnakeGame::eventHandler() {
+int SnakeGame::popEvent() {
+    int event;
+    if (!eventQueue.empty()) {
+        event = eventQueue.front();
+        eventQueue.pop_front();
+    } else {
+        event = ERR;
+    }
+    return event;
 }
 
-void SnakeGame::eventLoop(int event) {
-    if (event != ERR) {
-        eventQueue.push_back(event);
-    }
-    
-    if (isAwake()) {
-        if (!eventQueue.empty()) {
-            event = eventQueue.front();
-            eventQueue.pop_front();
-        } else {
-            event = ERR;
-        }
-        sleep_ms(SLEEP_TIME_MS);
-    } else {
-        // still asleep
-        return;
-    }
-
+void SnakeGame::eventHandlerAlive() {
+    int event = popEvent();
 
     int newRowMovement, newColMovement;
     newRowMovement = rowMovement;
@@ -229,4 +219,46 @@ void SnakeGame::eventLoop(int event) {
     }
 
     step();
+
+    sleepIntervalMs = SNAKE_SPEED;
+}
+
+void SnakeGame::deathAnimationStep() {
+    // go head first
+    // head is at the last of snake list
+    if (snake.empty()) return;
+    auto snakeHead = snake.back();
+    int rowHead = snakeHead.first;
+    int colHead = snakeHead.second;
+    displayCell(rowHead, colHead, deadSnakeChar);
+    snake.pop_back();
+}
+
+void SnakeGame::eventHandlerDead() {
+    deathAnimationStep();
+    sleepIntervalMs = 100;
+}
+
+void SnakeGame::eventLoop(int event) {
+    if (event != ERR) {
+        eventQueue.push_back(event);
+    }
+
+    bool awake = isAwake();
+    
+    if (!awake) {
+        // if the widget is asleep, it should not process any events
+        return;
+    }
+
+    if (alive) {
+        eventHandlerAlive();
+    } else {
+        eventHandlerDead();
+    }
+
+    // if the widget is finally awake, schedule the next sleep
+    sleep_ms(sleepIntervalMs);
+
+    wrefresh(win);
 }

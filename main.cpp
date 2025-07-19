@@ -20,7 +20,7 @@ int main() {
     refresh();
     SnakeGame game(0, 0, 15, 15);
 
-    while (game.alive) {
+    while (true) {
         int event = getch();
         game.eventLoop(event);
     }
