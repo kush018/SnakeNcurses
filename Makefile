@@ -1,5 +1,5 @@
-main: main.cpp src/SnakeGame.hpp
-	g++ -g main.cpp -lncurses -o main
+main: main.cpp src/SnakeGame.hpp src/SnakeGame.cpp
+	g++ -g main.cpp src/SnakeGame.cpp -lncurses -o main
 
 run: main
 	./main
