@@ -1,0 +1,9 @@
+{
+    "makefile.launchConfigurations": [
+        {
+            "cwd": "/home/kushal/CPP/Snake",
+            "binaryPath": "/home/kushal/CPP/Snake/main",
+            "binaryArgs": []
+        }
+    ]
+}
