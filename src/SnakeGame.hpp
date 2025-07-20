@@ -4,7 +4,7 @@
 #include <list>
 #include <utility>
 
-#include "Frame.hpp"
+#include "FrameBare.hpp"
 
 #define CELL_HEIGHT 1
 #define CELL_WIDTH 2
@@ -20,12 +20,15 @@
  * All the functions are non-blocking
  * All functions do NOT refresh the window except eventLoop and the constructor
  */
-class SnakeGame: public Frame {
+class SnakeGame: public FrameBare {
 public:
+
+    WINDOW* win;
 
     /// @brief Main event loop of this widget. Refreshes at the end of the function
     /// Only point of contact with the main function
     void eventLoop(int event); 
+    void refreshLoop();
 
     void eventHandlerAlive();
     void eventHandlerDead();

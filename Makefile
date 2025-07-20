@@ -1,5 +1,5 @@
-CPPSRC = src/SnakeGame.cpp src/Frame.cpp
-HPPSRC = src/SnakeGame.hpp src/Frame.hpp
+CPPSRC = src/SnakeGame.cpp src/FrameBare.cpp
+HPPSRC = src/SnakeGame.hpp src/FrameBare.hpp
 
 main: main.cpp $(CPPSRC) $(HPPSRC)
 	g++ -g main.cpp $(CPPSRC) -lncurses -o main

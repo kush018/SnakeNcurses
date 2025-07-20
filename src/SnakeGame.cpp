@@ -6,11 +6,13 @@
 #include <ncurses.h>
 
 #include "SnakeGame.hpp"
-#include "Frame.hpp"
+#include "FrameBare.hpp"
 
 SnakeGame::SnakeGame(int startY, int startX, int nRows, int nCols) {
     rowMovement = 0;
     colMovement = 1;
+
+    srand(timeNowMicro());
 
     sleepIntervalMs = 0;
 
@@ -55,7 +57,7 @@ SnakeGame::SnakeGame(int startY, int startX, int nRows, int nCols) {
 
     placeApple();
 
-    wrefresh(win);
+    refreshLoop();
 }
 
 void SnakeGame::placeApple() {
@@ -215,7 +217,7 @@ void SnakeGame::eventHandlerDead() {
 }
 
 void SnakeGame::eventLoop(int event) {
-    Frame::eventLoop(event);
+    FrameBare::eventLoop(event);
 
     if (!isAwake()) {
         // if the widget is asleep, it should not process any events
@@ -227,4 +229,8 @@ void SnakeGame::eventLoop(int event) {
     } else {
         eventHandlerDead();
     }
+}
+
+void SnakeGame::refreshLoop() {
+    wrefresh(win);
 }

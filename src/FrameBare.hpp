@@ -3,14 +3,14 @@
 #include <ncurses.h>
 #include <list>
 
-class Frame {
+class FrameBare {
 public:
-    /// @brief The window where the game is displayed
-    WINDOW* win;
 
     int sleepIntervalMs;
     /// @brief The time when this widget should wake up
     int64_t wakeUpTimeMicro;
+    /// @brief Current time in microseconds
+    int64_t timeNowMicro();
     /// @brief Non blocking sleep for the given time in milliseconds.
     void sleep_ms(int time); 
     /// @brief To be used with sleep_ms. True, if the widget should wake up.
@@ -26,4 +26,6 @@ public:
     void sleepLoop();
     virtual void refreshLoop();
     void mainLoop(int event);
+
+    int eventBufferSize = 10;
 };
