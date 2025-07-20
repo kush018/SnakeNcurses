@@ -22,7 +22,7 @@ int main() {
 
     while (true) {
         int event = getch();
-        game.eventLoop(event);
+        game.mainLoop(event);
     }
 
     nodelay(stdscr, false);

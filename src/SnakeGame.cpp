@@ -6,10 +6,13 @@
 #include <ncurses.h>
 
 #include "SnakeGame.hpp"
+#include "Frame.hpp"
 
 SnakeGame::SnakeGame(int startY, int startX, int nRows, int nCols) {
     rowMovement = 0;
     colMovement = 1;
+
+    sleepIntervalMs = 0;
 
     score = INITIAL_SNAKE_SIZE;
     alive = true;
@@ -19,7 +22,7 @@ SnakeGame::SnakeGame(int startY, int startX, int nRows, int nCols) {
     init_pair(1, COLOR_BLACK, COLOR_GREEN); // body of the snake is this colorpair
     init_pair(2, COLOR_RED, COLOR_YELLOW); // head of the snake
     init_pair(3, COLOR_CYAN, COLOR_MAGENTA); // apples (yumm!)
-    init_pair(4, COLOR_RED, COLOR_RED); // dead snake (really sad)
+    init_pair(4, COLOR_WHITE, COLOR_RED); // dead snake (really sad)
     snakeBodyChar = '#' | COLOR_PAIR(1);
     snakeHeadChar = '\'' | COLOR_PAIR(2);
     appleChar = '@' | COLOR_PAIR(3);
@@ -164,33 +167,16 @@ void SnakeGame::step() {
 
 }
 
-void SnakeGame::sleep_ms(int time) {
-    int64_t timeNowMicro = std::chrono::duration_cast<std::chrono::microseconds>(
-        std::chrono::system_clock::now()
-        .time_since_epoch()
-    ).count();
 
-    wakeUpTimeMicro = timeNowMicro + time * 1000;
-}
-
-bool SnakeGame::isAwake() {
-    int64_t timeNowMicro = std::chrono::duration_cast<std::chrono::microseconds>(
-        std::chrono::system_clock::now()
-        .time_since_epoch()
-    ).count();
-    
-    return timeNowMicro >= wakeUpTimeMicro;
-}
-
-int SnakeGame::popEvent() {
-    int event;
-    if (!eventQueue.empty()) {
-        event = eventQueue.front();
-        eventQueue.pop_front();
-    } else {
-        event = ERR;
-    }
-    return event;
+void SnakeGame::deathAnimationStep() {
+    // go head first
+    // head is at the last of snake list
+    if (snake.empty()) return;
+    auto snakeHead = snake.back();
+    int rowHead = snakeHead.first;
+    int colHead = snakeHead.second;
+    displayCell(rowHead, colHead, deadSnakeChar);
+    snake.pop_back();
 }
 
 void SnakeGame::eventHandlerAlive() {
@@ -223,30 +209,15 @@ void SnakeGame::eventHandlerAlive() {
     sleepIntervalMs = SNAKE_SPEED;
 }
 
-void SnakeGame::deathAnimationStep() {
-    // go head first
-    // head is at the last of snake list
-    if (snake.empty()) return;
-    auto snakeHead = snake.back();
-    int rowHead = snakeHead.first;
-    int colHead = snakeHead.second;
-    displayCell(rowHead, colHead, deadSnakeChar);
-    snake.pop_back();
-}
-
 void SnakeGame::eventHandlerDead() {
     deathAnimationStep();
     sleepIntervalMs = 100;
 }
 
 void SnakeGame::eventLoop(int event) {
-    if (event != ERR) {
-        eventQueue.push_back(event);
-    }
+    Frame::eventLoop(event);
 
-    bool awake = isAwake();
-    
-    if (!awake) {
+    if (!isAwake()) {
         // if the widget is asleep, it should not process any events
         return;
     }
@@ -256,9 +227,4 @@ void SnakeGame::eventLoop(int event) {
     } else {
         eventHandlerDead();
     }
-
-    // if the widget is finally awake, schedule the next sleep
-    sleep_ms(sleepIntervalMs);
-
-    wrefresh(win);
 }
