@@ -236,3 +236,7 @@ void SnakeGame::eventLoop(int event) {
 void SnakeGame::refreshLoop() {
     wrefresh(win);
 }
+
+SnakeGame::~SnakeGame() {
+    delwin(win);
+}

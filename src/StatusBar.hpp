@@ -20,4 +20,6 @@ public:
 
     void print(std::string text, alignment align); 
 
+    ~StatusBar();
+
 };

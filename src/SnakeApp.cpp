@@ -27,3 +27,9 @@ void SnakeApp::eventLoop(int event) {
     statusBarBottom->clear();
     statusBarBottom->print("SCORE: " + std::to_string(snakeGame->score), StatusBar::RIGHT);
 }
+
+SnakeApp::~SnakeApp() {
+    delete snakeGame;
+    delete statusBarTop;
+    delete statusBarBottom;
+}

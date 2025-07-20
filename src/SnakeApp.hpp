@@ -20,4 +20,6 @@ public:
 
     void refreshLoop();
     void eventLoop(int event);
+
+    ~SnakeApp();
 };

@@ -4,6 +4,8 @@
 #include <list>
 #include <utility>
 
+#include <fstream>
+
 #include "FrameBare.hpp"
 
 #define CELL_HEIGHT 1
@@ -65,5 +67,7 @@ public:
     void step(); 
     /// @brief Colors the snake with deadSnakeChar (as an animation)
     void deathAnimationStep();
+
+    ~SnakeGame();
 
 };

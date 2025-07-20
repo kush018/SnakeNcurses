@@ -42,3 +42,7 @@ void StatusBar::print(std::string text, alignment align) {
 void StatusBar::refreshLoop() {
     wrefresh(win);
 }
+
+StatusBar::~StatusBar() {
+    delwin(win);
+}
