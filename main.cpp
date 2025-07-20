@@ -1,8 +1,7 @@
 #include <ncurses.h>
-#include <unistd.h>
 #include <stdio.h>
 
-#include "src/SnakeGame.hpp"
+#include "src/SnakeApp.hpp"
 
 int main() {
 
@@ -18,11 +17,11 @@ int main() {
     nodelay(stdscr, true);
 
     refresh();
-    SnakeGame game(0, 0, 15, 15);
+    SnakeApp snakeApp(0, 0, 15, 15);
 
     while (true) {
         int event = getch();
-        game.mainLoop(event);
+        snakeApp.mainLoop(event);
     }
 
     nodelay(stdscr, false);

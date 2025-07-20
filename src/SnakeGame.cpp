@@ -229,6 +229,8 @@ void SnakeGame::eventLoop(int event) {
     } else {
         eventHandlerDead();
     }
+
+    sleep_ms(sleepIntervalMs);
 }
 
 void SnakeGame::refreshLoop() {

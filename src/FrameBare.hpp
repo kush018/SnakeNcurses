@@ -23,7 +23,6 @@ public:
     /// @brief Main event loop of this widget. Refreshes at the end of the function
     /// Only point of contact with the main function
     virtual void eventLoop(int event); 
-    void sleepLoop();
     virtual void refreshLoop();
     void mainLoop(int event);
 

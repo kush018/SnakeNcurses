@@ -43,16 +43,9 @@ void FrameBare::eventLoop(int event) {
     }
 }
 
-void FrameBare::sleepLoop() {
-    if (isAwake()) {
-        sleep_ms(sleepIntervalMs);
-    }
-}
-
 void FrameBare::mainLoop(int event) {
 
     eventLoop(event);
-    sleepLoop();
     refreshLoop();
 }
 
