@@ -16,10 +16,12 @@ public:
     StatusBar* statusBarTop;
     StatusBar* statusBarBottom;
 
+    bool terminated = false;
+
     int score = 0;
     bool isAlive = true;
 
-    SnakeApp(int startY, int startX, int nRows, int nCols);
+    SnakeApp();
 
     void refreshLoop();
     void eventLoop(int event);

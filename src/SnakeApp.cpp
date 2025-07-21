@@ -1,7 +1,24 @@
+#include <ncurses.h>
+
 #include "SnakeApp.hpp"
 #include "FrameBare.hpp"
 
-SnakeApp::SnakeApp(int startY, int startX, int nRows, int nCols) {
+#include "Configuration.hpp"
+
+SnakeApp::SnakeApp() {
+
+    int nRows = 15;
+    int nCols = 15;
+
+    int yMax = (2 + nRows * CELL_HEIGHT) + 2;
+    int xMax = 2 + nCols * CELL_WIDTH;
+
+    int screenY, screenX;
+    getmaxyx(stdscr, screenY, screenX);
+
+    int startY = (screenY-yMax)/2;
+    int startX = (screenX-xMax)/2;
+
     snakeGame = new SnakeGame(startY + 1, startX, nRows, nCols);
     statusBarTop = new StatusBar(startY, startX, snakeGame->xMax);
     statusBarBottom = new StatusBar(startY + snakeGame->yMax, startX, snakeGame->xMax);
@@ -24,6 +41,8 @@ void SnakeApp::refreshLoop() {
 
 void SnakeApp::eventLoop(int event) {
     snakeGame->eventLoop(event);
+
+    terminated = snakeGame->terminated;
 
     if (score != snakeGame->score) {
         score = snakeGame->score;

@@ -8,7 +8,7 @@ public:
 
     int sleepIntervalMs;
     /// @brief The time when this widget should wake up
-    int64_t wakeUpTimeMicro;
+    int64_t wakeUpTimeMicro = 0;
     /// @brief Current time in microseconds
     int64_t timeNowMicro();
     /// @brief Non blocking sleep for the given time in milliseconds.

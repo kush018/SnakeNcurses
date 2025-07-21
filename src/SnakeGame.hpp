@@ -8,12 +8,7 @@
 
 #include "FrameBare.hpp"
 
-#define CELL_HEIGHT 1
-#define CELL_WIDTH 2
-
-#define INITIAL_SNAKE_SIZE 4
-
-#define SNAKE_SPEED 150
+#include "Configuration.hpp"
 
 /**
  * (y, x) represents the actual coordinates in the window.
@@ -68,6 +63,8 @@ public:
     void step(); 
     /// @brief Colors the snake with deadSnakeChar (as an animation)
     void deathAnimationStep();
+
+    bool terminated = false;
 
     ~SnakeGame();
 

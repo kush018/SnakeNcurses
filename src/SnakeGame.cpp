@@ -174,7 +174,10 @@ void SnakeGame::step() {
 void SnakeGame::deathAnimationStep() {
     // go head first
     // head is at the last of snake list
-    if (snake.empty()) return;
+    if (snake.empty()) {
+        terminated = true; // nothing left to do anymore
+        return;
+    }
     auto snakeHead = snake.back();
     int rowHead = snakeHead.first;
     int colHead = snakeHead.second;
