@@ -31,6 +31,7 @@ public:
     /// Only point of contact with the main function
     void eventLoop(int event); 
     void refreshLoop();
+    bool isDirty = true; 
 
     void eventHandlerAlive();
     void eventHandlerDead();

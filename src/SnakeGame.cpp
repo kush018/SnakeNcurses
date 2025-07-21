@@ -57,6 +57,7 @@ SnakeGame::SnakeGame(int startY, int startX, int nRows, int nCols) {
 
     placeApple();
 
+    isDirty = true;
     refreshLoop();
 }
 
@@ -229,12 +230,15 @@ void SnakeGame::eventLoop(int event) {
     } else {
         eventHandlerDead();
     }
+    isDirty = true;
 
     sleep_ms(sleepIntervalMs);
 }
 
 void SnakeGame::refreshLoop() {
+    if (isDirty == false) return; // no need to do anything
     wrefresh(win);
+    isDirty = false;
 }
 
 SnakeGame::~SnakeGame() {

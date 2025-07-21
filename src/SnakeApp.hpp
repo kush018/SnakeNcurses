@@ -16,6 +16,9 @@ public:
     StatusBar* statusBarTop;
     StatusBar* statusBarBottom;
 
+    int score = 0;
+    bool isAlive = true;
+
     SnakeApp(int startY, int startX, int nRows, int nCols);
 
     void refreshLoop();

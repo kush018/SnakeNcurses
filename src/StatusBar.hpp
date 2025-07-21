@@ -8,6 +8,7 @@ class StatusBar : public FrameBare {
 public:
 
     WINDOW* win;
+    bool isDirty = true;
     void refreshLoop();
 
     enum alignment {LEFT, RIGHT, CENTER};

@@ -13,6 +13,7 @@ StatusBar::StatusBar(int startY, int startX, int size) {
     wattron(win, A_REVERSE);
     clear();
 
+    isDirty = true;
     refreshLoop();
 }
 
@@ -20,6 +21,7 @@ void StatusBar::clear() {
     for (int i = 0; i < size; i++) {
         mvwaddch(win, 0, i, ' ');
     }
+    isDirty = true;
 }
 
 void StatusBar::print(std::string text, alignment align) {
@@ -37,10 +39,13 @@ void StatusBar::print(std::string text, alignment align) {
         case RIGHT:
             mvwprintw(win, 0, size-textSize, text.c_str());
     }
+    isDirty = true;
 }
 
 void StatusBar::refreshLoop() {
+    if (isDirty == false) return; // no need to do anything
     wrefresh(win);
+    isDirty = false;
 }
 
 StatusBar::~StatusBar() {

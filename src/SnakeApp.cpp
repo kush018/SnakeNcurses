@@ -7,6 +7,7 @@ SnakeApp::SnakeApp(int startY, int startX, int nRows, int nCols) {
     statusBarBottom = new StatusBar(startY + snakeGame->yMax, startX, snakeGame->xMax);
 
     statusBarTop->print("SNAKE GAME", StatusBar::CENTER);
+    statusBarBottom->print("SCORE: " + std::to_string(score), StatusBar::CENTER);
 
     sleepIntervalMs = 0;
 
@@ -24,8 +25,22 @@ void SnakeApp::refreshLoop() {
 void SnakeApp::eventLoop(int event) {
     snakeGame->eventLoop(event);
 
-    statusBarBottom->clear();
-    statusBarBottom->print("SCORE: " + std::to_string(snakeGame->score), StatusBar::RIGHT);
+    if (score != snakeGame->score) {
+        score = snakeGame->score;
+        statusBarBottom->clear();
+        statusBarBottom->print("SCORE: " + std::to_string(score), StatusBar::CENTER);
+    }
+
+    if (isAlive != snakeGame->alive) {
+        isAlive = snakeGame->alive;
+        statusBarTop->clear();
+        if (isAlive) {
+            statusBarTop->print("SNAKE GAME", StatusBar::CENTER);
+        } else {
+            statusBarTop->print("GAME OVER", StatusBar::CENTER);
+        }
+    }
+
 }
 
 SnakeApp::~SnakeApp() {
