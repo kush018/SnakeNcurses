@@ -31,7 +31,8 @@ int main() {
         switch (context) {
             case MAIN_MENU:
                 if (mainMenu == nullptr) mainMenu = new MainMenu();
-                mainMenu->mainLoop(event);
+                mainMenu->eventLoop(event);
+                mainMenu->refreshLoop();
                 if (mainMenu->terminated) {
                     clear();
                     switch (mainMenu->currentlyHighlighted) {
@@ -51,7 +52,8 @@ int main() {
                 break;
             case SNAKE_APP:
                 if (snakeApp == nullptr) snakeApp = new SnakeApp();
-                snakeApp->mainLoop(event);
+                snakeApp->eventLoop(event);
+                snakeApp->refreshLoop();
                 if (snakeApp->terminated) {
                     clear();
                     context = MAIN_MENU;

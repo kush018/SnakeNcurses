@@ -1,25 +1,15 @@
-#include <cassert>
-#include <cstdlib>
-#include <chrono>
-#include <utility>
-#include <list>
-#include <ncurses.h>
-
 #include "SnakeGame.hpp"
-#include "FrameBare.hpp"
 
-SnakeGame::SnakeGame(int startY, int startX, int nRows, int nCols) {
-    rowMovement = 0;
-    colMovement = 1;
+SnakeGame::SnakeGame(int startY, int startX) {
+    this->nRows = N_ROWS_GAME_GRID;
+    this->nCols = N_COLS_GAME_GRID;        
 
-    srand(timeNowMicro());
+    this->yMax = 2 + nRows * CELL_HEIGHT;
+    this->xMax = 2 + nCols * CELL_WIDTH;
 
-    sleepIntervalMs = 0;
+    this->win = newwin(yMax, xMax, startY, startX);
 
-    score = INITIAL_SNAKE_SIZE;
-    alive = true;
-
-    wakeUpTimeMicro = 0; // initially this widget is awake
+    box(win, 0, 0);
 
     init_pair(1, COLOR_BLACK, COLOR_GREEN); // body of the snake is this colorpair
     init_pair(2, COLOR_RED, COLOR_YELLOW); // head of the snake
@@ -29,20 +19,6 @@ SnakeGame::SnakeGame(int startY, int startX, int nRows, int nCols) {
     snakeHeadChar = '\'' | COLOR_PAIR(2);
     appleChar = '@' | COLOR_PAIR(3);
     deadSnakeChar = 'X' | COLOR_PAIR(4);
-
-    assert(nRows >= 2);
-    assert(nCols >= INITIAL_SNAKE_SIZE + 1);
-
-    this->nRows = nRows;
-    this->nCols = nCols;        
-
-    this->yMax = 2 + nRows * CELL_HEIGHT;
-    this->xMax = 2 + nCols * CELL_WIDTH;
-
-    this->win = newwin(yMax, xMax, startY, startX);
-
-    box(win, 0, 0);
-    
 
     for (int i = 0; i < INITIAL_SNAKE_SIZE; i++) {
         snake.push_back({0, i});
@@ -55,6 +31,7 @@ SnakeGame::SnakeGame(int startY, int startX, int nRows, int nCols) {
         }
     }
 
+    srand(timeNowMicro());
     placeApple();
 
     isDirty = true;
@@ -104,10 +81,11 @@ void SnakeGame::displayCell(int row, int col, chtype ch) {
             mvwaddch(win, y, x, ch);
         }
     }
+    isDirty = true;
 }
 
 void SnakeGame::pushHead() {
-    // convert the head to the body color
+    // convert the head to the body char
     displayCell(snake.back().first, snake.back().second, snakeBodyChar);
 
     // create a new head
@@ -146,9 +124,7 @@ void SnakeGame::step() {
     assert(colMovement == 0 || rowMovement == 0);
     assert(abs(colMovement) == 1 || abs(rowMovement) == 1);
 
-
     pullTail();
-
     pushHead();
 
     if (!alive) {
@@ -169,7 +145,6 @@ void SnakeGame::step() {
 
 
 }
-
 
 void SnakeGame::deathAnimationStep() {
     // go head first
@@ -192,13 +167,13 @@ void SnakeGame::eventHandlerAlive() {
     newRowMovement = rowMovement;
     newColMovement = colMovement;
     switch (event) {
-        case KEY_UP:
+        case KEY_UP: case 'w': case 'W':
             newRowMovement = -1; newColMovement = 0; break;
-        case KEY_DOWN:
+        case KEY_DOWN: case 's': case 'S':
             newRowMovement = 1; newColMovement = 0; break;
-        case KEY_RIGHT:
+        case KEY_RIGHT: case 'd': case 'D':
             newRowMovement = 0; newColMovement = 1; break;
-        case KEY_LEFT:
+        case KEY_LEFT: case 'a': case 'A':
             newRowMovement = 0; newColMovement = -1;
     }
 
@@ -212,18 +187,20 @@ void SnakeGame::eventHandlerAlive() {
 
     step();
 
-    sleepIntervalMs = SNAKE_SPEED;
+    wakeUpTimeMicro = timeNowMicro() + SNAKE_GAME_MOVEMENT_DELAY_MS * 1000;
 }
 
 void SnakeGame::eventHandlerDead() {
     deathAnimationStep();
-    sleepIntervalMs = 100;
+
+    wakeUpTimeMicro = timeNowMicro() + SNAKE_DEATH_ANIMATION_DELAY_MS * 1000;
 }
 
 void SnakeGame::eventLoop(int event) {
     FrameBare::eventLoop(event);
 
-    if (!isAwake()) {
+    bool isAwake = timeNowMicro() >= wakeUpTimeMicro;
+    if (!isAwake) {
         // if the widget is asleep, it should not process any events
         return;
     }
@@ -233,9 +210,7 @@ void SnakeGame::eventLoop(int event) {
     } else {
         eventHandlerDead();
     }
-    isDirty = true;
 
-    sleep_ms(sleepIntervalMs);
 }
 
 void SnakeGame::refreshLoop() {

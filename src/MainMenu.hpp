@@ -4,55 +4,51 @@
 #include <list>
 #include <utility>
 #include <string>
+#include <cassert>
 
 #include "FrameBare.hpp"
 
-#define SNAKE_SIZE 10 
+#include "Configuration.hpp"
 
-#define TITLE_ROW 4
-#define PLAY_ROW 7
-#define HELP_ROW 9
-#define QUIT_ROW 11
-#define SCORE_ROW 13
-
+/**
+ * y and x is always with respect to the complete imaginary window that 
+ * MainMenu creates (the full one including borders and everything)
+ */
 class MainMenu: public FrameBare {
 public:
-    WINDOW* win;
-    int yMax, xMax;
+    bool terminated; // hand control to the parent
 
-    int nRows, nCols;
+    WINDOW* win;
+    int yMax, xMax; // size occupied by the MainMenu window
+
 
     bool isDirty;
+    void refreshLoop() override;
 
-    bool terminated;
-
-    chtype snakeHeadChar, snakeBodyChar;
+    void eventLoop(int event) override;
 
     MainMenu();
 
-    ~MainMenu();
-
-    void refreshLoop();
-    void eventLoop(int event);
-
-    void initializeSnake(int snakeSize);
     void displayMenu();
 
-    std::list<std::pair<int, int>> snake;   
-    void displayCell(int row, int col, chtype ch);
-    bool pushHead(); 
-    void pullTail(); 
-    void step(); 
-
-    bool on = true;
-
+    bool on = true; // is currentlyHighlighed actually highlighed (for blinking purposes)
     enum highlighted {PLAY=0, HELP=1, QUIT=2};
     int currentlyHighlighted;
 
     enum alignment {LEFT, RIGHT, CENTER};
     void print(std::string text, int y, alignment align);
     void clearLine(int y);
-
-
     int64_t blinkToggleTimeMicro = 0;
+
+    int nRows, nCols;
+    chtype snakeHeadChar, snakeBodyChar;
+    std::list<std::pair<int, int>> snake;   
+
+    int64_t snakeAnimationTimeMicro = 0;
+    void initializeSnake(int snakeSize);
+    void displayCell(int row, int col, chtype ch);
+    void pushHead(); 
+    void pullTail(); 
+
+    ~MainMenu();
 };

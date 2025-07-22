@@ -1,6 +1,3 @@
-#include <ncurses.h>
-#include <chrono>
-
 #include "FrameBare.hpp"
 
 int64_t FrameBare::timeNowMicro() {
@@ -11,15 +8,6 @@ int64_t FrameBare::timeNowMicro() {
     ).count();
 
     return timeNow;
-}
-
-void FrameBare::sleep_ms(int time) {
-    wakeUpTimeMicro = timeNowMicro() + time * 1000;
-
-}
-
-bool FrameBare::isAwake() {
-    return timeNowMicro() >= wakeUpTimeMicro;
 }
 
 int FrameBare::popEvent() {
@@ -41,12 +29,6 @@ void FrameBare::eventLoop(int event) {
     if (eventQueue.size() > eventBufferSize) {
         eventQueue.pop_front();
     }
-}
-
-void FrameBare::mainLoop(int event) {
-
-    eventLoop(event);
-    refreshLoop();
 }
 
 void FrameBare::refreshLoop() {

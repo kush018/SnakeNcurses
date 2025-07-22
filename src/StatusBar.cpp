@@ -1,16 +1,11 @@
-#include <string>
-#include <ncurses.h>
-
 #include "StatusBar.hpp"
-#include "FrameBare.hpp"
 
 StatusBar::StatusBar(int startY, int startX, int size) {
     win = newwin(1, size, startY, startX);
     this->size = size;
 
-    eventBufferSize = 0; // does not need to process events
-
     wattron(win, A_REVERSE);
+
     clear();
 
     isDirty = true;
@@ -31,13 +26,13 @@ void StatusBar::print(std::string text, alignment align) {
     switch (align) {
         case LEFT:
             // easiest case
-            mvwprintw(win, 0, 0, text.c_str());
+            mvwprintw(win, 0, 0, "%s", text.c_str());
             break;
         case CENTER:
-            mvwprintw(win, 0, (size-textSize) / 2, text.c_str());
+            mvwprintw(win, 0, (size-textSize) / 2, "%s", text.c_str());
             break;
         case RIGHT:
-            mvwprintw(win, 0, size-textSize, text.c_str());
+            mvwprintw(win, 0, size-textSize, "%s", text.c_str());
     }
     isDirty = true;
 }
@@ -46,6 +41,10 @@ void StatusBar::refreshLoop() {
     if (isDirty == false) return; // no need to do anything
     wrefresh(win);
     isDirty = false;
+}
+
+void StatusBar::eventLoop(int event) {
+    
 }
 
 StatusBar::~StatusBar() {
