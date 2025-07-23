@@ -70,7 +70,8 @@ void SnakeApp::eventLoop(int event) {
 }
 
 SnakeApp::~SnakeApp() {
-    delete snakeGame;
-    delete statusBarTop;
-    delete statusBarBottom;
+    if (snakeGame != nullptr) delete snakeGame;
+    if (statusBarTop != nullptr) delete statusBarTop;
+    if (statusBarBottom != nullptr) delete statusBarBottom;
+    if (gameOverPopup != nullptr) gameOverPopup;
 }

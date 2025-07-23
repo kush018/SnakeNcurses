@@ -51,6 +51,8 @@ int main() {
                             context = MAIN_MENU;
                             break;
                         case mainMenu->QUIT:
+                            if (mainMenu != nullptr) delete mainMenu;
+                            if (snakeApp != nullptr) delete snakeApp;
                             endwin();
                             return 0;
                     }
@@ -72,38 +74,9 @@ int main() {
         }
     }
 
-
+    if (mainMenu != nullptr) delete mainMenu;
+    if (snakeApp != nullptr) delete snakeApp;
     endwin();
 
 }
-
-#if 0
-int main() {
-    initscr();
-    cbreak();
-    noecho();
-    curs_set(0);
-    if (has_colors()) start_color();
-    init_pair(BLACK_ON_GREEN, COLOR_BLACK, COLOR_GREEN);
-    init_pair(RED_ON_YELLOW, COLOR_RED, COLOR_YELLOW);
-    init_pair(CYAN_ON_MAGENTA, COLOR_CYAN, COLOR_MAGENTA);
-    init_pair(WHITE_ON_RED, COLOR_WHITE, COLOR_RED);
-    keypad(stdscr, true);
-    nodelay(stdscr, true);
-
-    GameOverPopup* popup = new GameOverPopup(0, 0, 6, 20, 30);
-    refresh();
-    while (popup->terminated == false) {
-        int event = getch();
-        popup->eventLoop(event);
-        popup->refreshLoop();
-    }
-
-    clear();
-    refresh();
-
-    getch();
-    endwin();
-}
-#endif
 

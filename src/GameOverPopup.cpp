@@ -131,4 +131,8 @@ void GameOverPopup::refreshLoop() {
     }
 }
 
+GameOverPopup::~GameOverPopup() {
+    delwin(win);
+}
+
 
