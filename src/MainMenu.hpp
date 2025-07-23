@@ -7,8 +7,8 @@
 #include <cassert>
 
 #include "FrameBare.hpp"
-
 #include "Configuration.hpp"
+#include "ColorPairs.hpp"
 
 /**
  * y and x is always with respect to the complete imaginary window that 
@@ -36,7 +36,7 @@ public:
     int currentlyHighlighted;
 
     enum alignment {LEFT, RIGHT, CENTER};
-    void print(std::string text, int y, alignment align);
+    void printLine(std::string text, int y, int align);
     void clearLine(int y);
     int64_t blinkToggleTimeMicro = 0;
 

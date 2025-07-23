@@ -11,14 +11,10 @@ SnakeGame::SnakeGame(int startY, int startX) {
 
     box(win, 0, 0);
 
-    init_pair(1, COLOR_BLACK, COLOR_GREEN); // body of the snake is this colorpair
-    init_pair(2, COLOR_RED, COLOR_YELLOW); // head of the snake
-    init_pair(3, COLOR_CYAN, COLOR_MAGENTA); // apples (yumm!)
-    init_pair(4, COLOR_WHITE, COLOR_RED); // dead snake (really sad)
-    snakeBodyChar = '#' | COLOR_PAIR(1);
-    snakeHeadChar = '\'' | COLOR_PAIR(2);
-    appleChar = '@' | COLOR_PAIR(3);
-    deadSnakeChar = 'X' | COLOR_PAIR(4);
+    snakeBodyChar = '#' | COLOR_PAIR(BLACK_ON_GREEN);
+    snakeHeadChar = '\'' | COLOR_PAIR(RED_ON_YELLOW);
+    appleChar = '@' | COLOR_PAIR(CYAN_ON_MAGENTA);
+    deadSnakeChar = 'X' | COLOR_PAIR(WHITE_ON_RED);
 
     for (int i = 0; i < INITIAL_SNAKE_SIZE; i++) {
         snake.push_back({0, i});
@@ -143,7 +139,6 @@ void SnakeGame::step() {
         }
     }
 
-
 }
 
 void SnakeGame::deathAnimationStep() {
@@ -197,7 +192,9 @@ void SnakeGame::eventHandlerDead() {
 }
 
 void SnakeGame::eventLoop(int event) {
-    FrameBare::eventLoop(event);
+    if (terminated) return; // do nothing
+
+    queueEvent(event);
 
     bool isAwake = timeNowMicro() >= wakeUpTimeMicro;
     if (!isAwake) {

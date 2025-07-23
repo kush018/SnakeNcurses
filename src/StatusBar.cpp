@@ -19,7 +19,7 @@ void StatusBar::clear() {
     isDirty = true;
 }
 
-void StatusBar::print(std::string text, alignment align) {
+void StatusBar::printLine(std::string text, alignment align) {
     text = text.substr(0, size);
     // now text is truncated if the size exceeds the size
     int textSize = text.size();

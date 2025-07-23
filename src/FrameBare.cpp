@@ -21,7 +21,7 @@ int FrameBare::popEvent() {
     return event;
 }
 
-void FrameBare::eventLoop(int event) {
+void FrameBare::queueEvent(int event) {
     if (event != ERR) {
         eventQueue.push_back(event);
     }
@@ -29,6 +29,10 @@ void FrameBare::eventLoop(int event) {
     if (eventQueue.size() > eventBufferSize) {
         eventQueue.pop_front();
     }
+}
+
+void FrameBare::eventLoop(int event) {
+
 }
 
 void FrameBare::refreshLoop() {

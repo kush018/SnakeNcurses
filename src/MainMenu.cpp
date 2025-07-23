@@ -19,10 +19,8 @@ MainMenu::MainMenu() {
     win = newwin(yMax, xMax, (yScreen-yMax)/2, (xScreen-xMax)/2);
     box(win, 0, 0);
 
-    init_pair(1, COLOR_BLACK, COLOR_GREEN); // body of the snake is this colorpair
-    init_pair(2, COLOR_RED, COLOR_YELLOW); // head of the snake
-    snakeBodyChar = '#' | COLOR_PAIR(1);
-    snakeHeadChar = '\'' | COLOR_PAIR(2);
+    snakeBodyChar = '#' | COLOR_PAIR(BLACK_ON_GREEN);
+    snakeHeadChar = '\'' | COLOR_PAIR(RED_ON_YELLOW);
 
     initializeSnake(SNAKE_SIZE_MAIN_MENU);
 
@@ -48,19 +46,19 @@ void MainMenu::displayMenu() {
     clearLine(QUIT_Y_MAIN_MENU);
 
     wattron(win, A_BOLD | A_UNDERLINE);
-    print("SNAKE GAME", TITLE_Y_MAIN_MENU, CENTER); // title
+    printLine("SNAKE GAME", TITLE_Y_MAIN_MENU, CENTER); // title
     wattroff(win, A_BOLD | A_UNDERLINE);
 
     if (currentlyHighlighted == PLAY && on) wattron(win, A_REVERSE);
-    print("(P)LAY", PLAY_Y_MAIN_MENU, CENTER);
+    printLine("(P)LAY", PLAY_Y_MAIN_MENU, CENTER);
     if (currentlyHighlighted == PLAY && on) wattroff(win, A_REVERSE);
     
     if (currentlyHighlighted == HELP && on) wattron(win, A_REVERSE);
-    print("(H)ELP", HELP_Y_MAIN_MENU, CENTER);
+    printLine("(H)ELP", HELP_Y_MAIN_MENU, CENTER);
     if (currentlyHighlighted == HELP && on) wattroff(win, A_REVERSE);
 
     if (currentlyHighlighted == QUIT && on) wattron(win, A_REVERSE);
-    print("(Q)UIT", QUIT_Y_MAIN_MENU, CENTER);
+    printLine("(Q)UIT", QUIT_Y_MAIN_MENU, CENTER);
     if (currentlyHighlighted == QUIT && on) wattroff(win, A_REVERSE);
 }
 
@@ -160,7 +158,7 @@ void MainMenu::eventLoop(int event) {
     if (changedMainMenu) displayMenu();
 }
 
-void MainMenu::print(std::string text, int y, alignment align) {
+void MainMenu::printLine(std::string text, int y, int align) {
     int startX = 1 + CELL_WIDTH; // x coordinate where the border just ends
     int maxLen = xMax - 2 - 2 * CELL_WIDTH; // maximum writing length
     assert(1 + CELL_HEIGHT <= y && y < yMax - CELL_HEIGHT); // ensure that y is not on the border

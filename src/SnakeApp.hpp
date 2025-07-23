@@ -5,6 +5,7 @@
 
 #include "StatusBar.hpp"
 #include "SnakeGame.hpp"
+#include "GameOverPopup.hpp"
 #include "FrameBare.hpp"
 
 #include "Configuration.hpp"
@@ -19,11 +20,13 @@ public:
 
     int64_t wakeUpTimeMicro = 0;
 
-    SnakeGame* snakeGame;
-    StatusBar* statusBarTop;
-    StatusBar* statusBarBottom;
+    SnakeGame* snakeGame = nullptr;
+    StatusBar* statusBarTop = nullptr;
+    StatusBar* statusBarBottom = nullptr;
+    GameOverPopup* gameOverPopup = nullptr;
 
-    int xMax, yMax; /// Size occupied by whole SnakeApp window
+    int xMax, yMax; // Size occupied by whole SnakeApp window
+    int startY, startX;
 
     int score = 0;
     bool isAlive = true;

@@ -10,6 +10,7 @@
 
 #include "FrameBare.hpp"
 #include "Configuration.hpp"
+#include "ColorPairs.hpp"
 
 /**
  * (y, x) represents the actual coordinates in the window.

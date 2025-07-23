@@ -21,7 +21,7 @@ public:
     void clear(); 
 
     enum alignment {LEFT, RIGHT, CENTER};
-    void print(std::string text, alignment align); 
+    void printLine(std::string text, alignment align); 
 
     ~StatusBar();
 
